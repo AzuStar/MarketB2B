@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using MarketB2B.Services;
+using MarketB2B.Services.Implementation;
+using MarketB2B.Data;
+using Microsoft.EntityFrameworkCore;
+using MarketB2B.Config;
+using Microsoft.Extensions.Configuration;
 
 var spaSrcPath = "ClientApp";
 var corsPolicyName = "AllowAll";
@@ -17,12 +23,24 @@ builder.Services.AddHealthChecks()
     .AddGCInfoCheck("GCInfo");
 
 // Write healthcheck custom results to healthchecks-ui (use InMemory for the DB - AspNetCore.HealthChecks.UI.InMemory.Storage nuget package)
-builder.Services.AddHealthChecksUI()
-    .AddInMemoryStorage();
+// builder.Services.AddHealthChecksUI();
 
 builder.Services.AddCorsConfig(corsPolicyName);
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
+
+
+IConfigurationSection mailConf = builder.Configuration.GetSection("MailSettings");
+builder.Services.Configure<MailSettings>(mailConf);
+
+
+builder.Services.AddDbContext<DataContext>(context => context.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), (x) =>
+    {
+        x.UseNetTopologySuite();
+    }));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IDataService, DataService>();
 
 // Add Brotli/Gzip response compression (prod only)
 builder.Services.AddResponseCompressionConfig(builder.Configuration);
