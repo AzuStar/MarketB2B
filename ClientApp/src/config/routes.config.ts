@@ -2,6 +2,8 @@ import type { ComponentType } from 'react';
 import type { Params } from 'react-router';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import Main from 'src/containers/Main';
+import Contact from 'src/containers/Contact';
+import Catalog from 'src/containers/Catalog';
 
 export const TRANSITION_DEFAULT = {
   classNames: 'fade',
@@ -23,7 +25,7 @@ export type Route = Readonly<{
 
 export const Routes: Route[] = [
   {
-    name: 'Logout',
+    name: 'Главная',
     path: '/',
     icon: 'sign-out-alt',
     Component: Main,
@@ -36,23 +38,23 @@ export const Routes: Route[] = [
     Component: Main,
     transition: TRANSITION_DEFAULT
   },
-  // {
-  //   name: 'Form',
-  //   path: '/form',
-  //   showInNav: true,
-  //   Component: Form,
-  //   transition: {
-  //     classNames: 'page-slide-left',
-  //     timeout: { enter: 350, exit: 250 }
-  //   }
-  // },
-  // {
-  //   showInNav: true,
-  //   name: 'Home',
-  //   path: '/home',
-  //   Component: Dashboard,
-  //   transition: TRANSITION_DEFAULT
-  // },
+  {
+    name: 'Сваяжитесь с нами',
+    path: '/contact-us',
+    showInNav: true,
+    Component: Contact,
+    transition: {
+      classNames: 'page-slide-left',
+      timeout: { enter: 350, exit: 250 }
+    }
+  },
+  {
+    showInNav: true,
+    name: 'Каталог',
+    path: '/catalog',
+    Component: Catalog,
+    transition: TRANSITION_DEFAULT
+  },
   // {
   //   name: 'Fetch',
   //   showInNav: true,
